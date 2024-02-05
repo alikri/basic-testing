@@ -3,6 +3,7 @@ import {
   throwError,
   throwCustomError,
   resolveValue,
+  MyAwesomeError,
   rejectCustomError,
 } from './index';
 
@@ -27,12 +28,12 @@ describe('throwError', () => {
 
 describe('throwCustomError', () => {
   test('should throw custom error', () => {
-    expect(() => throwCustomError()).toThrowErrorMatchingSnapshot();
+    expect(() => throwCustomError()).toThrow(MyAwesomeError);
   });
 });
 
 describe('rejectCustomError', () => {
   test('should reject custom error', async () => {
-    await expect(rejectCustomError()).rejects.toThrowErrorMatchingSnapshot();
+    await expect(rejectCustomError()).rejects.toThrow(MyAwesomeError);
   });
 });
