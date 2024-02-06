@@ -2,8 +2,19 @@
 import {
   // readFileAsynchronously,
   doStuffByTimeout,
-  // doStuffByInterval,
+  doStuffByInterval,
 } from './index';
+
+jest.mock('fs', () => ({
+  existsSync: jest.fn(),
+  promises: {
+    readFile: jest.fn(),
+  },
+}));
+
+jest.mock('path', () => ({
+  join: jest.fn(),
+}));
 
 describe('doStuffByTimeout', () => {
   beforeEach(() => {
@@ -36,6 +47,10 @@ describe('doStuffByTimeout', () => {
 });
 
 describe('doStuffByInterval', () => {
+  beforeEach(() => {
+    jest.spyOn(global, 'setInterval');
+  });
+
   beforeAll(() => {
     jest.useFakeTimers();
   });
@@ -45,11 +60,18 @@ describe('doStuffByInterval', () => {
   });
 
   test('should set interval with provided callback and timeout', () => {
-    // Write your test here
+    const callback = jest.fn();
+    doStuffByInterval(callback, 1000);
+    expect(setInterval).toHaveBeenCalledWith(callback, 1000);
   });
 
   test('should call callback multiple times after multiple intervals', () => {
-    // Write your test here
+    const callback = jest.fn();
+    doStuffByInterval(callback, 1000);
+    expect(callback).not.toHaveBeenCalled();
+
+    jest.advanceTimersByTime(2000);
+    expect(callback).toHaveBeenCalledTimes(2);
   });
 });
 
