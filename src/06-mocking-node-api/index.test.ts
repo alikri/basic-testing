@@ -1,6 +1,5 @@
 // Uncomment the code below and write your tests
 import { join } from 'path';
-import fs from 'fs';
 import { readFile } from 'fs/promises';
 import { existsSync } from 'fs';
 
@@ -95,7 +94,7 @@ describe('readFileAsynchronously', () => {
   test('should return null if file does not exist', async () => {
     const wrongPathToFile = 'wrongPathToFile/test.txt';
     await readFileAsynchronously(wrongPathToFile);
-    jest.spyOn(fs, 'existsSync').mockReturnValue(false);
+    (existsSync as jest.Mock).mockReturnValue(false);
     await expect(readFileAsynchronously(wrongPathToFile)).resolves.toBeNull();
   });
 
