@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { throttledGetDataFromApi } from './index';
+import { throttledGetDataFromApi, THROTTLE_TIME } from './index';
 
 jest.mock('axios', () => ({
   create: jest.fn(() => ({
@@ -14,6 +14,14 @@ describe('throttledGetDataFromApi', () => {
 
     (axios.create as jest.Mock).mockReturnValue({
       get: jest.fn().mockResolvedValue({ data: 'mockData' }),
+    });
+  });
+
+  test('should create instance with provided base url', async () => {
+    jest.advanceTimersByTime(THROTTLE_TIME);
+    await throttledGetDataFromApi('/news');
+    expect(axios.create).toHaveBeenCalledWith({
+      baseURL: 'https://jsonplaceholder.typicode.com',
     });
   });
 
